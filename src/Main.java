@@ -207,6 +207,7 @@ public class Main {
             System.exit(0);
         } catch (IOException exception) {
             System.out.println("Hubo un error al crear el archivo comprimido");
+            System.exit(-3);
         }
     }
 
@@ -309,6 +310,7 @@ public class Main {
             System.exit(0);
         } catch (IOException exception) {
             System.out.println("Hubo un error al crear el archivo descomprimido");
+            System.exit(-3);
         }
     }
 
@@ -359,7 +361,7 @@ public class Main {
     public static void main(String[] parametros) {
         if (parametros.length == 0) {
             System.out.println("ERROR, No se recibió ninguna indicación");
-            System.exit(1);
+            System.exit(-5);
         }
 
         Main main = new Main();
@@ -368,7 +370,7 @@ public class Main {
             file = new File(parametros[1]);
         } else {
             System.out.println("ERROR, No se recibió ningún archivo");
-            System.exit(1);
+            System.exit(-4);
         }
         try {
             if (parametros[0].equals("-c")) {
@@ -392,6 +394,7 @@ public class Main {
                     }
                 } else {
                     System.out.println("Sucedió un error, el archivo ya está comprimido. Favor revisarlo.");
+                    System.exit(-3);
                 }
             }
             if (parametros[0].equals("-d")) {
@@ -412,12 +415,15 @@ public class Main {
                     }
                 } else {
                     System.out.println("Sucedió un error, el archivo no está comprimido, o sucedió un error de formato. Favor revisarlo.");
+                    System.exit(-3);
                 }
             } else {
                 System.out.println("ERROR, no se reconoció la instrucción. Intente de nuevo");
+                System.exit(-2);
             }
         } catch (IOException exception) {
             System.out.println("Hubo un error al intentar abrir el archivo");
+            System.exit(-1);
         }
     }
 }
