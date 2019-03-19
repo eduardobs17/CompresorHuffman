@@ -104,8 +104,10 @@ public class Main {
      * @param nombreDestino opcional. Es el nombre del archivo de salida.
      */
     private void comprimir(BitInputStream file1, BitInputStream file2, String tipo, String nombreDestino) {
+        System.out.println("Comprimiendo archivo...");
         Lista<Arbol<Par<Character, Integer>>> l = new Lista<>();
         int tamArchivo = 0;
+        System.out.println("Creando lista...");
         while (file1.hasNextBit()) {
             int readByte = file1.read();
             if (buscar((char) readByte, l)) {
@@ -124,7 +126,9 @@ public class Main {
             tamArchivo++;
         }
 
+        System.out.println("Creando árbol...");
         Arbol<Par<Character, Integer>> arbolHuffman = crearArbolHuffman(l);
+        System.out.println("Creando tabla...");
         Lista<Par<Character, String>> tabla = crearTabla(arbolHuffman, "", new Lista<>());
 
         int tamano = tipo.length();
@@ -137,6 +141,9 @@ public class Main {
             } else {
                 nuevoBitOutputStream = new BitOutputStream(new FileOutputStream(nombreDestino + ".huf"));
             }
+
+            System.out.println("Escribiendo en archivo comprimido...");
+
             nuevoBitOutputStream.write('h');
             nuevoBitOutputStream.write('u');
             nuevoBitOutputStream.write('f');
@@ -220,6 +227,9 @@ public class Main {
      * @param tieneNombre false si el usuario no digita ninguno. Si fuera así, el archivo llevará el nombre original + "Descomprimido"
      */
     private void descomprimir(BitInputStream file, String nombreDestino, boolean tieneNombre) {
+        System.out.println("Descomprimiendo...");
+
+        System.out.println("Comprobando formato de salida...");
         String tipo = "";
         boolean continuar = true;
         while (continuar) {
@@ -230,6 +240,8 @@ public class Main {
                 continuar = false;
             }
         }
+
+        System.out.println("Comprobando cantidad de caracteres distintos...");
         String basura = "";
         continuar = true;
         while (continuar) {
@@ -242,6 +254,7 @@ public class Main {
         }
         int cantidadCaracteres = Integer.parseInt(basura);
 
+        System.out.println("Comprobando tamaño archivo de salida...");
         basura = "";
         continuar = true;
         while (continuar) {
@@ -254,6 +267,7 @@ public class Main {
         }
         int tamArchivo = Integer.parseInt(basura);
 
+        System.out.println("Reconstruyendo tabla...");
         Lista<Par<Character,String>> tabla = new Lista<>();
         while (tabla.numElementos() != cantidadCaracteres) {
             String codigo = "";
@@ -275,10 +289,13 @@ public class Main {
             Par<Character,String> par = new Par<>(caracter, codigo);
             tabla.agregar(par);
         }
+
+        System.out.println("Reconstruyendo arbol...");
         Arbol<Character> arbolHuffman = reconstruirArbol(tabla);
 
         try {
             BitOutputStream nuevoBitOutputStream;
+            System.out.println("Creando descomprimido...");
             if (tieneNombre) {
                 nuevoBitOutputStream = new BitOutputStream(new FileOutputStream(nombreDestino + "." + tipo));
             } else {
@@ -286,6 +303,7 @@ public class Main {
                 nuevoBitOutputStream = new BitOutputStream(new FileOutputStream(nombreArchivo + "Descomprimido." + tipo));
             }
 
+            System.out.println("Recorriendo arbol y escribiendo archivo...");
             file.setBitMode(true);
             int contador = 0;
             while (contador < tamArchivo) {
@@ -359,6 +377,7 @@ public class Main {
      *                   El tercero es opcional, si se desea que el archivo de salida tenga un nombre en especial.
      */
     public static void main(String[] parametros) {
+        System.out.println("Verificando parámetros...");
         if (parametros.length == 0) {
             System.out.println("ERROR, No se recibió ninguna indicación");
             System.exit(-5);
